@@ -37,7 +37,8 @@ class AutoTest(unittest.TestCase):
         driver.find_element(By.ID, "et_pb_signup_email").send_keys("Email@email.com")
         driver.find_element(By.CLASS_NAME, "et_pb_newsletter_button").click()
         time.sleep(5)
-        assert "email: Email address blocked. Please refer to https://help.aweber.com/entries/97662366" in driver.page_source
+        error = driver.find_element(By.XPATH, "//div [@class = 'et_pb_newsletter_result']")
+        self.assertEquals(error.text, "email: Email address blocked. Please refer to https://help.aweber.com/entries/97662366 .")
         #Radio buttons random sellect
         options = driver.find_elements(By.XPATH, "//input[@name='selection']")
         option = random.choice(options)
@@ -45,11 +46,16 @@ class AutoTest(unittest.TestCase):
         toggle = driver.find_element(By.CLASS_NAME, "buttonClassExample")
         driver.execute_script("arguments[0].scrollIntoView()", toggle)
         driver.find_element(By.XPATH, "(//h5)[1][@class='et_pb_toggle_title']").click()
-        assert "Automation testing is awesome" in driver.page_source
+        sign = driver.find_element(By.XPATH, "//*[@id='post-5969']/div/div[3]/div/div[2]/div[2]/div")
+        self.assertEquals(sign.text, "Automation testing is awesome")
         driver.find_element(By.XPATH, "//*[@id='post-5969']/div/div[3]/div/div[2]/div[4]/ul/li[2]/a").click()
-        assert "This is tab 2" in driver.page_source
-        driver.find_element(By.XPATH, "//*[@id='post-5969']/div/div[3]/div/div[2]/div[4]/ul/li[1]/a")
-        assert "This is tab 1" in driver.page_source
+        time.sleep(2)
+        sign2 = driver.find_element(By.XPATH, "//div[@class='et_pb_tab clearfix et-pb-active-slide']")
+        self.assertEquals(sign2.text, "This is tab 2")
+        driver.find_element(By.XPATH, "//*[@id='post-5969']/div/div[3]/div/div[2]/div[4]/ul/li[1]/a").click()
+        time.sleep(2)
+        sign3 = driver.find_element(By.XPATH, "//div[@class='et_pb_tab clearfix et_pb_active_content et-pb-active-slide']")
+        self.assertEquals(sign3.text, "This is tab 1")
         driver.find_element(By.XPATH, "(//h5)[2][@class = 'et_pb_toggle_title']").click()
         time.sleep(2)
         options1 = driver.find_elements(By.XPATH, "//input[@type = 'checkbox']")
