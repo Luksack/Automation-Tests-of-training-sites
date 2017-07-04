@@ -16,56 +16,66 @@ class AutoTest(unittest.TestCase):
         self.driver = webdriver.Chrome(executable_path='/Users/lukaszsack/downloads/chromedriver')
 
     def test_auto_site(self):
+
+        name = "John Doe"
+        Email = "Email@email.com"
+        Tab = "//*[@id='post-5969']/div/div[3]/div/div[2]/div[4]/ul"
+
         driver = self.driver
         driver.get("http://www.qtptutorial.net/automation-practice/")
         assert "Automation Testing Practice Page" in driver.title
+
         driver.find_element(By.ID, "idExample").click()
         assert "Button success" in driver.title
         driver.back()
+
         driver.find_element(By.CLASS_NAME, "buttonClassExample").click()
         assert "Button success" in driver.title
         driver.back()
+
         driver.find_element(By.NAME, "NameExample").click()
         assert "Button success" in driver.title
         driver.back()
+
         driver.find_element(By.CLASS_NAME, "et_pb_promo_button").click()
         driver.back()
+
         driver.find_element(By.ID, "simpleElementsLink").click()
         driver.back()
-        #driver.find_element(By.XPATH, "//*[@id='post-5969']/div/div[3]/div/div[1]/div[4]/div/h4/a").click()
-        driver.find_element(By.ID, "et_pb_signup_firstname").send_keys("John Doe")
-        driver.find_element(By.ID, "et_pb_signup_email").send_keys("Email@email.com")
+
+        driver.find_element(By.ID, "et_pb_signup_firstname").send_keys(name)
+        driver.find_element(By.ID, "et_pb_signup_email").send_keys(Email)
         driver.find_element(By.CLASS_NAME, "et_pb_newsletter_button").click()
         time.sleep(5)
         error = driver.find_element(By.XPATH, "//div [@class = 'et_pb_newsletter_result']")
         self.assertEquals(error.text, "email: Email address blocked. Please refer to https://help.aweber.com/entries/97662366 .")
-        #Radio buttons random sellect
+
         options = driver.find_elements(By.XPATH, "//input[@name='selection']")
         option = random.choice(options)
         option.click()
+
         toggle = driver.find_element(By.CLASS_NAME, "buttonClassExample")
         driver.execute_script("arguments[0].scrollIntoView()", toggle)
+
         driver.find_element(By.XPATH, "(//h5)[1][@class='et_pb_toggle_title']").click()
-        sign = driver.find_element(By.XPATH, "//*[@id='post-5969']/div/div[3]/div/div[2]/div[2]/div")
+        sign = driver.find_element(By.XPATH, "(//div[@class ='et_pb_toggle_content clearfix'])[1]")
         self.assertEquals(sign.text, "Automation testing is awesome")
-        driver.find_element(By.XPATH, "//*[@id='post-5969']/div/div[3]/div/div[2]/div[4]/ul/li[2]/a").click()
+        
+        driver.find_element(By.XPATH, Tab +'/li[2]/a').click()
         time.sleep(2)
         sign2 = driver.find_element(By.XPATH, "//div[@class='et_pb_tab clearfix et-pb-active-slide']")
         self.assertEquals(sign2.text, "This is tab 2")
-        driver.find_element(By.XPATH, "//*[@id='post-5969']/div/div[3]/div/div[2]/div[4]/ul/li[1]/a").click()
+
+        driver.find_element(By.XPATH, Tab +'/li[1]/a').click()
         time.sleep(2)
         sign3 = driver.find_element(By.XPATH, "//div[@class='et_pb_tab clearfix et_pb_active_content et-pb-active-slide']")
         self.assertEquals(sign3.text, "This is tab 1")
+
         driver.find_element(By.XPATH, "(//h5)[2][@class = 'et_pb_toggle_title']").click()
         time.sleep(2)
         options1 = driver.find_elements(By.XPATH, "//input[@type = 'checkbox']")
         option = random.choice(options1)
         option.click()
-
-
-
-
-
 
         driver.save_screenshot('Test.png')
 
