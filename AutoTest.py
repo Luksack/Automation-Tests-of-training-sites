@@ -1,11 +1,7 @@
 import unittest
-import time
-from selenium import webdriver
-from selenium.webdriver.support.ui import Select
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.by import By
 import random
+from selenium import webdriver
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -68,8 +64,9 @@ class AutoTest(unittest.TestCase):
 
         wait.until(EC.presence_of_element_located((By.XPATH, "//div[contains(@style, 'opacity: 1')]")))
         driver.find_element(By.XPATH, Tab + "/li[1]/a").click()
-        sign3 = wait.until(EC.visibility_of_element_located((By.XPATH,
-                                                             "//div[@class='et_pb_tab clearfix et_pb_active_content et-pb-active-slide']")))
+        sign3 = wait.until(
+            EC.visibility_of_element_located(
+                (By.XPATH, "//div[@class='et_pb_tab clearfix et_pb_active_content et-pb-active-slide']")))
         self.assertEquals(sign3.text, "This is tab 1")
 
         driver.find_element(By.XPATH, "(//h5)[2][@class = 'et_pb_toggle_title']").click()
