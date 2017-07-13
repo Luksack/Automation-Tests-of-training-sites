@@ -1,81 +1,59 @@
 import unittest
-import random
+
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+
+import TestSite
 
 
 class AutoTest(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome(executable_path='/Users/lukaszsack/downloads/chromedriver')
+        TestSite.TestSite.open_site(self)
 
-    def test_auto_site(self):
-        driver = self.driver
-        Name = "John Doe"
-        Email = "Email@email.com"
-        Tab = "//*[@id='post-5969']/div/div[3]/div/div[2]/div[4]/ul"
-        wait = WebDriverWait(driver, 10)
+    def test_button_by_id(self):
+        TestSite.TestSite.click_button_by_id(self)
+        assert "Button success" in self.driver.title
 
-        driver.get("http://www.qtptutorial.net/automation-practice/")
-        assert "Automation Testing Practice Page" in driver.title
+    def test_button_by_class_name(self):
+        TestSite.TestSite.click_button_by_class_name(self)
+        assert "Button success" in self.driver.title
 
-        driver.find_element(By.ID, "idExample").click()
-        assert "Button success" in driver.title
-        driver.back()
+    def test_button_by_name(self):
+        TestSite.TestSite.click_button_by_name(self)
+        assert "Button success" in self.driver.title
 
-        driver.find_element(By.CLASS_NAME, "buttonClassExample").click()
-        assert "Button success" in driver.title
-        driver.back()
+    def test_click_me_button(self):
+        TestSite.TestSite.click_me_button(self)
 
-        driver.find_element(By.NAME, "NameExample").click()
-        assert "Button success" in driver.title
-        driver.back()
+    def test_click_link(self):
+        TestSite.TestSite.click_link(self)
 
-        driver.find_element(By.CLASS_NAME, "et_pb_promo_button").click()
-        driver.back()
+    def test_form(self):
+        form_test = TestSite.TestSite(self.driver)
+        form_test.set_name("John")
+        form_test.set_email("email@example.com")
+        form_test.click_form_button()
 
-        driver.find_element(By.ID, "simpleElementsLink").click()
-        driver.back()
-
-        driver.find_element(By.ID, "et_pb_signup_firstname").send_keys(Name)
-        driver.find_element(By.ID, "et_pb_signup_email").send_keys(Email)
-        driver.find_element(By.CLASS_NAME, "et_pb_newsletter_button").click()
-
-        error = wait.until(EC.visibility_of_element_located((By.XPATH, "//div [@class = 'et_pb_newsletter_result']")))
-        self.assertEquals(error.text,
+        self.assertEquals(form_test.form_error_assert().text,
                           "email: Email address blocked. Please refer to https://help.aweber.com/entries/97662366 .")
 
-        options = driver.find_elements(By.XPATH, "//input[@name='selection']")
-        option = random.choice(options)
-        option.click()
+    def test_random_radio_button(self):
+        TestSite.TestSite.radio_buttons(self)
 
-        toggle = driver.find_element(By.CLASS_NAME, "buttonClassExample")
-        driver.execute_script("arguments[0].scrollIntoView()", toggle)
+    def test_open_toggle(self):
+        TestSite.TestSite.open_toggle(self)
+        self.assertEquals(TestSite.TestSite.toggle_message(self).text, "Automation testing is awesome")
 
-        driver.find_element(By.XPATH, "(//h5)[1][@class='et_pb_toggle_title']").click()
-        sign = driver.find_element(By.XPATH, "(//div[@class ='et_pb_toggle_content clearfix'])[1]")
-        self.assertEquals(sign.text, "Automation testing is awesome")
+    def test_tab(self):
+        test_tab = TestSite.TestSite(self.driver)
+        test_tab.click_tab_2()
+        self.assertEquals(test_tab.tab_2_msg_assert().text, "This is tab 2")
 
-        driver.find_element(By.XPATH, Tab + '/li[2]/a').click()
-        sign2 = wait.until(
-            EC.visibility_of_element_located((By.XPATH, "//div[@class='et_pb_tab clearfix et-pb-active-slide']")))
-        self.assertEquals(sign2.text, "This is tab 2")
+        test_tab.click_tab_1()
+        self.assertEquals(test_tab.tab_1_msg_assert().text, "This is tab 1")
 
-        wait.until(EC.presence_of_element_located((By.XPATH, "//div[contains(@style, 'opacity: 1')]")))
-        driver.find_element(By.XPATH, Tab + "/li[1]/a").click()
-        sign3 = wait.until(
-            EC.visibility_of_element_located(
-                (By.XPATH, "//div[@class='et_pb_tab clearfix et_pb_active_content et-pb-active-slide']")))
-        self.assertEquals(sign3.text, "This is tab 1")
-
-        driver.find_element(By.XPATH, "(//h5)[2][@class = 'et_pb_toggle_title']").click()
-        wait.until(EC.visibility_of_element_located((By.XPATH, "//input[@type = 'checkbox']")))
-        options1 = driver.find_elements(By.XPATH, "//input[@type = 'checkbox']")
-        option = random.choice(options1)
-        option.click()
-
-        driver.save_screenshot('Test.png')
+    def test_checkbox(self):
+        TestSite.TestSite.click_checkbox(self)
 
     def tearDown(self):
         self.driver.close()
