@@ -3,9 +3,12 @@ from selenium import webdriver
 from Ecommerce import EcommercePage
 
 
+
 class EcommerceTest(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome(executable_path='/Users/lukaszsack/Downloads/chromedriver')
+        self.driver.set_window_position(-1500, 0)
+        self.driver.set_window_size(1680, 1050)
         self.driver.maximize_window()
         EcommercePage.EcommercePage.open_page(self)
 
@@ -40,33 +43,33 @@ class EcommerceTest(unittest.TestCase):
 
         cart_assert = ecommerce.assert_cart()
         self.assertEqual(cart_assert.text, "Product successfully added to your shopping cart")
-
-    def test_create_account(self):
-        name = "Robert"
-        last_name = "Kozak"
-        ecommerce = EcommercePage.EcommercePage(self.driver)
-        ecommerce.sign_in_click()
-        ecommerce.set_email("example@example6.com")
-        ecommerce.set_gender("male")
-        ecommerce.set_name(name)
-        ecommerce.set_last_name(last_name)
-        ecommerce.set_password("qwert123")
-        ecommerce.set_birth_date()
-        ecommerce.set_address("300 BOYLSTON AVE E")
-        ecommerce.set_state()
-        ecommerce.set_city("Boylston")
-        ecommerce.set_postal_code("55786")
-        ecommerce.set_mobile_phone("456666678")
-        ecommerce.register_button()
-
-        create_account_assert = ecommerce.assert_create_account()
-        self.assertEqual(create_account_assert.text,name +" "+ last_name)
+    #
+    # def test_create_account(self):
+    #     name = "Robert"
+    #     last_name = "Kozak"
+    #     ecommerce = EcommercePage.EcommercePage(self.driver)
+    #     ecommerce.sign_in_click()
+    #     ecommerce.set_email("")
+    #     ecommerce.set_gender("male")
+    #     ecommerce.set_name(name)
+    #     ecommerce.set_last_name(last_name)
+    #     ecommerce.set_password("qwert123")
+    #     ecommerce.set_birth_date()
+    #     ecommerce.set_address("300 BOYLSTON AVE E")
+    #     ecommerce.set_state()
+    #     ecommerce.set_city("Boylston")
+    #     ecommerce.set_postal_code("55786")
+    #     ecommerce.set_mobile_phone("456666678")
+    #     ecommerce.register_button()
+    #
+    #     create_account_assert = ecommerce.assert_create_account()
+    #     self.assertEqual(create_account_assert.text,name +" "+ last_name)
 
     def test_login_success(self):
         ecommerce = EcommercePage.EcommercePage(self.driver)
         ecommerce.sign_in_click()
-        ecommerce.set_login_mail("example@example6.com")
-        ecommerce.set_login_password("qwert123")
+        ecommerce.set_login_mail(EcommercePage.Config.email)
+        ecommerce.set_login_password(EcommercePage.Config.password)
         ecommerce.sign_in_button_click()
 
         login_assert = ecommerce.assert_login_success()
@@ -75,7 +78,7 @@ class EcommerceTest(unittest.TestCase):
     def test_login_fail(self):
         ecommerce = EcommercePage.EcommercePage(self.driver)
         ecommerce.sign_in_click()
-        ecommerce.set_login_mail("example@example6.com")
+        ecommerce.set_login_mail(EcommercePage.Config.email)
         ecommerce.set_login_password("asd123")
         ecommerce.sign_in_button_fail()
 
@@ -91,8 +94,8 @@ class EcommerceTest(unittest.TestCase):
         ecommerce.add_to_cart()
         ecommerce.check_out_button_click()
         ecommerce.cart_check_out_button_click()
-        ecommerce.set_login_mail("example@example6.com")
-        ecommerce.set_login_password("qwert123")
+        ecommerce.set_login_mail(EcommercePage.Config.email)
+        ecommerce.set_login_password(EcommercePage.Config.password)
         ecommerce.sign_in_button_click()
         ecommerce.proceed_to_checkout_button_click()
         ecommerce.check_terms()

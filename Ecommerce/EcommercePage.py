@@ -5,6 +5,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import Select
 import random
+import configparser
 
 
 class EcommercePage:
@@ -15,7 +16,7 @@ class EcommercePage:
     HTML_LIST = (By.XPATH, "//ul[@class = 'product_list grid row']/li")
     LIST = (By.XPATH, "//span[@class = 'heading-counter']")
 
-    PRODUCT = (By.XPATH, "(//div[@class= 'product-image-container'])[1]")
+    PRODUCT = (By.XPATH, "(//a[@href = 'http://automationpractice.com/index.php?id_product=5&controller=product&search_query=dress&results=7'])[4]")
     PRODUCT_WAIT = (By.XPATH, "//div[@id = 'image-block']")
     CART_BUTTON = (By.XPATH, "//button[@name = 'Submit']")
     ASSERT_CART = (By.XPATH, "//*[@id='layer_cart']/div[1]/div[1]/h2")
@@ -229,3 +230,10 @@ class EcommercePage:
         button.click()
         wait = WebDriverWait(self.driver, 10)
         wait.until(EC.visibility_of_element_located((EcommercePage.PAY_BY_BANK)))
+
+class Config:
+
+        cfg = configparser.ConfigParser()
+        cfg.read('config')
+        email = cfg["Login"]["email"]
+        password = cfg["Login"]["password"]
