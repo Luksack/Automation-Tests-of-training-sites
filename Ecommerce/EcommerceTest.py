@@ -1,18 +1,19 @@
 import unittest
 from selenium import webdriver
-from Ecommerce import EcommercePage
-
+import EcommercePage
+import HtmlTestRunner
 
 
 class EcommerceTest(unittest.TestCase):
     def setUp(self):
-        self.driver = webdriver.Chrome(executable_path='/Users/lukaszsack/Downloads/chromedriver')
+        self.driver = webdriver.Chrome()
         self.driver.set_window_position(-1500, 0)
         self.driver.set_window_size(1680, 1050)
         self.driver.maximize_window()
         EcommercePage.EcommercePage.open_page(self)
 
     def test_search_multi_items(self):
+        """Input query to successfully get many results."""
         query = "dress"
         ecommerce = EcommercePage.EcommercePage(self.driver)
         ecommerce.set_query(query)
@@ -24,6 +25,7 @@ class EcommerceTest(unittest.TestCase):
         self.assertEqual(query_assert.text, '"{}"'.format(query.upper()))
 
     def test_search_single_item(self):
+        """Input query to successfully get single result."""
         query = "shirt"
         ecommerce = EcommercePage.EcommercePage(self.driver)
         ecommerce.set_query(query)
@@ -35,6 +37,7 @@ class EcommerceTest(unittest.TestCase):
         self.assertEqual(query_assert.text, '"{}"'.format(query.upper()))
 
     def test_add_product_to_cart(self):
+        """Select product and successfully add it to cart."""
         query = "dress"
         ecommerce = EcommercePage.EcommercePage(self.driver)
         ecommerce.set_query(query)
@@ -43,8 +46,10 @@ class EcommerceTest(unittest.TestCase):
 
         cart_assert = ecommerce.assert_cart()
         self.assertEqual(cart_assert.text, "Product successfully added to your shopping cart")
+
     #
     # def test_create_account(self):
+    #   """Successfully created new account"""
     #     name = "Robert"
     #     last_name = "Kozak"
     #     ecommerce = EcommercePage.EcommercePage(self.driver)
@@ -66,6 +71,7 @@ class EcommerceTest(unittest.TestCase):
     #     self.assertEqual(create_account_assert.text,name +" "+ last_name)
 
     def test_login_success(self):
+        """Successfully login into created account."""
         ecommerce = EcommercePage.EcommercePage(self.driver)
         ecommerce.sign_in_click()
         ecommerce.set_login_mail(EcommercePage.Config.email)
@@ -76,6 +82,7 @@ class EcommerceTest(unittest.TestCase):
         self.assertEqual(login_assert.text, "MY ACCOUNT")
 
     def test_login_fail(self):
+        """Fail to login."""
         ecommerce = EcommercePage.EcommercePage(self.driver)
         ecommerce.sign_in_click()
         ecommerce.set_login_mail(EcommercePage.Config.email)
@@ -85,8 +92,8 @@ class EcommerceTest(unittest.TestCase):
         error_assert = ecommerce.assert_login_fail()
         self.assertEqual(error_assert.text, "There is 1 error\nAuthentication failed.")
 
-
     def test_product_buy(self):
+        """Get through buying process."""
         query = "dress"
         ecommerce = EcommercePage.EcommercePage(self.driver)
         ecommerce.set_query(query)
@@ -101,10 +108,10 @@ class EcommerceTest(unittest.TestCase):
         ecommerce.check_terms()
         ecommerce.shipping_button_click()
 
-
     def tearDown(self):
         self.driver.close()
 
 
 if __name__ == '__main__':
-    unittest.main()
+    unittest.main(
+        testRunner=HtmlTestRunner.HTMLTestRunner(output="/Users/lukaszsack/PycharmProjects/automation/Ecommerce"))

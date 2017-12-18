@@ -6,6 +6,7 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.support.ui import Select
 import random
 import configparser
+from selenium import webdriver
 
 
 class EcommercePage:
@@ -16,7 +17,8 @@ class EcommercePage:
     HTML_LIST = (By.XPATH, "//ul[@class = 'product_list grid row']/li")
     LIST = (By.XPATH, "//span[@class = 'heading-counter']")
 
-    PRODUCT = (By.XPATH, "(//a[@href = 'http://automationpractice.com/index.php?id_product=5&controller=product&search_query=dress&results=7'])[4]")
+    PRODUCT = (By.XPATH,
+               "(//a[@href = 'http://automationpractice.com/index.php?id_product=5&controller=product&search_query=dress&results=7'])[4]")
     PRODUCT_WAIT = (By.XPATH, "//div[@id = 'image-block']")
     CART_BUTTON = (By.XPATH, "//button[@name = 'Submit']")
     ASSERT_CART = (By.XPATH, "//*[@id='layer_cart']/div[1]/div[1]/h2")
@@ -51,7 +53,7 @@ class EcommercePage:
     CHECK_OUT_BUTTON_CART = (By.XPATH, "//a[@class = 'button btn btn-default standard-checkout button-medium']")
     PROCEED_TO_CHECKOUT_BUTTON = (By.XPATH, "//button[@class = 'button btn btn-default button-medium']")
     TERMS_OF_SERVICE_CHECK = (By.XPATH, "//input[@id = 'cgv']")
-    SHIPPING_BUTTON = (By.XPATH,"//button[@class = 'button btn btn-default standard-checkout button-medium']" )
+    SHIPPING_BUTTON = (By.XPATH, "//button[@class = 'button btn btn-default standard-checkout button-medium']")
     PAY_BY_BANK = (By.XPATH, "//a[@class = 'bankwire']")
 
     def __init__(self, driver):
@@ -194,7 +196,6 @@ class EcommercePage:
         wait = WebDriverWait(self.driver, 10)
         wait.until(EC.visibility_of_element_located((EcommercePage.ASSERT_LOGIN)))
 
-
     def assert_login_success(self):
         return self.driver.find_element(*EcommercePage.ASSERT_LOGIN)
 
@@ -212,28 +213,47 @@ class EcommercePage:
         button.click()
         wait = WebDriverWait(self.driver, 10)
         wait.until(EC.visibility_of_element_located((EcommercePage.CHECK_OUT_BUTTON_CART)))
+
     def cart_check_out_button_click(self):
         button = self.driver.find_element(*EcommercePage.CHECK_OUT_BUTTON_CART)
         button.click()
         wait = WebDriverWait(self.driver, 10)
         wait.until(EC.visibility_of_element_located((EcommercePage.SIGN_IN_BUTTON)))
+
     def proceed_to_checkout_button_click(self):
         button = self.driver.find_element(*EcommercePage.PROCEED_TO_CHECKOUT_BUTTON)
         button.click()
         wait = WebDriverWait(self.driver, 10)
         wait.until(EC.visibility_of_element_located((EcommercePage.SHIPPING_BUTTON)))
+
     def check_terms(self):
         check = self.driver.find_element(*EcommercePage.TERMS_OF_SERVICE_CHECK)
         check.click()
+
     def shipping_button_click(self):
         button = self.driver.find_element(*EcommercePage.SHIPPING_BUTTON)
         button.click()
         wait = WebDriverWait(self.driver, 10)
         wait.until(EC.visibility_of_element_located((EcommercePage.PAY_BY_BANK)))
 
-class Config:
+    def set_test_options(self, browser):
 
-        cfg = configparser.ConfigParser()
-        cfg.read('config')
-        email = cfg["Login"]["email"]
-        password = cfg["Login"]["password"]
+        if browser == "chrome":
+            self.driver = webdriver.Chrome(executable_path='/Users/lukaszsack/Downloads/chromedriver')
+            self.driver.set_window_position(-1500, 0)
+            self.driver.set_window_size(1680, 1050)
+            self.driver.maximize_window()
+        elif browser == "ff":
+            self.driver = webdriver.Firefox(executable_path='/Users/lukaszsack/Downloads/geckodriver')
+            self.driver.set_window_position(-1500, 0)
+            self.driver.set_window_size(1680, 1050)
+        elif browser == "safari":
+            self.driver = webdriver.Safari()
+
+
+class Config:
+    cfg = configparser.ConfigParser()
+    cfg.read('config')
+    email = cfg["Login"]["email"]
+    password = cfg["Login"]["password"]
+    br = cfg["Browser"]["chrome"]
